@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ipl Ticket Booking System</title>
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<script>
+
+    class user {
+        constructor(name, age, gender, category) {
+            this.name = name;
+            this.age = age;
+            this.gender = gender;
+            this.category = category;
+        }
+    }
+
+    // let u1 = new user("Suman", 25, "Male", "VVIP");
+    // console.log(u1);
+    // creating Seat
+    class Seat {
+        constructor(seat_num, row_num) {
+            this.seat_num = seat_num;
+            this.row_num = row_num;
+            this.status = false;
+        }
+    }
+
+    // let s1 = new Seat(2, 3);
+    // console.log(s1);
+
+    //creating Rows
+    class Row {
+        constructor(num, category, max_seat_num) {
+            this.row_num = num;
+            this.category = category;
+            this.seat = [];
+            for (let i = 0; i < max_seat_num; i++) {
+                this.seat.push(new Seat(this.row_num, i));
+            }
+
+        }
+    }
+    // creating floors
+    class Floor {
+        constructor(num, max_row) {
+            this.floor_num = num;
+            this.seat_arrange = [];
+            for (let i = 0; i < max_row; i++) {
+                if (i == 0) {
+                    this.seat_arrange.push(new Row(i, "VVIP", 8));
+                } else if (i == 1) {
+                    this.seat_arrange.push(new Row(i, "VIP", 8));
+                } else {
+                    this.seat_arrange.push(new Row(i, "GENERAL", 8));
+                }
+            }
+
+        }
+    }
+
+    // creating stadium
+    class stadium {
+        constructor(num) {
+            this.floor_num = num;
+            this.st_floor = [];
+            for (let i = 0; i < num; i++) {
+                this.st_floor.push(new Floor(i, 4));
+            }
+        }
+
+        check_slot(user) {
+            for (let i = 0; i < this.floor_num; i++) {
+                for (let j = 0; j < 4; j++) {
+                    if (user.category == this.st_floor[i].seat_arrange[j].category) {
+                        for (let k = 0; k < 8; k++) {
+                            if (!this.st_floor[i].seat_arrange[j].seat[k].status) {
+                                this.st_floor[i].seat_arrange[j].seat[k].status = true;
+                            }
+                            return { floor_num: i + 1, row_num: j + 1, seat_num: k + 1 }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        book(user) {
+            let slot = this.check_slot(user);
+            if (slot) {
+                let ticket = new Ticket(user, slot);
+                return ticket;
+            }
+            return "Stadium Is Full !.."
+        }
+    }
+
+    let s1 = new stadium(4)
+    console.log(s1);
+
+    class Ticket {
+        constructor(user, ticket) {
+            this.Name = user.name;
+            this.Age = user.age;
+            this.Gender = user.gender;
+            this.Category = user.category
+            this.Floor_No = ticket.floor_num;
+            this.Row_No = ticket.row_num;
+            this.Seat_No = ticket.seat_num;
+            this.Date = new Date();
+        }
+    }
+
+    let user1 = new user("Suman", 25, "Male", "VVIP");
+    console.log(s1.book(user1));
+
+    let user2 = new user("Farhan", 24, "Male", "VVIP");
+    console.log(s1.book(user2));
+
+    let user3 = new user("Shivam", 24, "Male", "VVIP");
+    console.log(s1.book(user3));
+
+</script>
